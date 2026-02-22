@@ -1,0 +1,14 @@
+app = "teste-api-late-brook-4912"
+primary_region = "gru"
+
+[build]
+
+[deploy]
+  release_command = "npx prisma migrate deploy"
+
+[processes]
+  worker = "node syncAll.js"
+
+[[vm]]
+  memory = "512mb"
+  cpus = 1

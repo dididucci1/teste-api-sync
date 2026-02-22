@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Token {
+  id           Int      @id @default(1)
+  accessToken  String
+  refreshToken String
+  expiresIn    Int
+  expiresAt DateTime?
+  updatedAt    DateTime @updatedAt
+}
+
+
+model Categoria {
+  idContaAzul String   @id
+  nome        String
+  tipo        String?
+  updatedAt   DateTime @updatedAt
+}
+
+model ContaPagar {
+  id              String   @id
+  descricao       String?
+  status          String?
+  valor           Float?
+  dataVencimento  DateTime?
+  dataCompetencia DateTime?
+  dataCriacao     DateTime?
+  dataAlteracao   DateTime?
+
+  pessoaId String?
+  pessoa   Pessoa? @relation(fields: [pessoaId], references: [id])
+}
+
+model ContaReceber {
+  id              String   @id
+  descricao       String?
+  status          String?
+  valor           Float?
+  dataVencimento  DateTime?
+  dataCompetencia DateTime?
+  dataCriacao     DateTime?
+  dataAlteracao   DateTime?
+
+  pessoaId String?
+  pessoa   Pessoa? @relation(fields: [pessoaId], references: [id])
+}
+
+model Pessoa {
+  id        String @id
+  nome      String?
+  tipo      String?
+  documento String?
+  email     String?
+
+  contasReceber ContaReceber[]
+  contasPagar   ContaPagar[]
+}
+
+model Venda {
+  id          String       @id
+  numero      String?
+  status      String?
+  total       Float?
+  dataEmissao DateTime?
+  pessoaId    String?
+
+  itens       ItemVenda[]
+}
+
+model ItemVenda {
+  id            String   @id
+  vendaId       String
+  produtoId     String?
+  descricao     String?
+  quantidade    Float?
+  valorUnitario Float?
+  valorTotal    Float?
+
+  venda Venda @relation(fields: [vendaId], references: [id], onDelete: Cascade)
+}
